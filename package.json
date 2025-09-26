@@ -1,7 +1,10 @@
 {
   "name": "mng-base",
-  "version": "1.2.5",
-  "main": "dist/index.js",
+  "version": "1.2.6",
+  "repository": {
+    "url": "https://github.com/Mng12345/mng-base"
+  },
+  "homepage": "https://github.com/Mng12345/mng-base",
   "license": "MIT",
   "exports": {
     ".": {
@@ -9,17 +12,17 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     },
-    "option": {
+    "./option": {
       "types": "./dist/esm/option.d.ts",
       "import": "./dist/esm/option.js",
       "require": "./dist/cjs/option.js"
     },
-    "result": {
+    "./result": {
       "types": "./dist/esm/result.d.ts",
       "import": "./dist/esm/result.js",
       "require": "./dist/cjs/result.js"
     },
-    "types": {
+    "./types": {
       "types": "./dist/esm/types.d.ts"
     }
   },
