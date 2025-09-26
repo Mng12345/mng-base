@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.structural = exports.nominal = void 0;
+exports.nominal = nominal;
+exports.structural = structural;
 function nominal(value, typeName) {
     return Object.assign(Object.assign({}, value), { [__typeid__]: typeName });
 }
-exports.nominal = nominal;
 function structural(value) {
     return Object.assign(Object.assign({}, value), { [__typeid__]: undefined });
 }
-exports.structural = structural;

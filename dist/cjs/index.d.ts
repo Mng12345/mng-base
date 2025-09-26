@@ -35,7 +35,7 @@ declare namespace base {
 }
 export default base;
 export declare const isNotNull: <T>(value: T) => value is NonNullable<T>;
-export declare const isNullable: (value: any) => value is null | undefined;
+export declare const isNullable: (value: any) => value is (null | undefined);
 export declare const block: typeof base.block;
 export import types = types_;
 export import ds = data_structure;
