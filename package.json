@@ -1,8 +1,9 @@
 {
   "name": "mng-base",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "repository": {
-    "url": "https://github.com/Mng12345/mng-base"
+    "type": "git",
+    "url": "https://github.com/Mng12345/mng-base.git"
   },
   "homepage": "https://github.com/Mng12345/mng-base",
   "license": "MIT",
