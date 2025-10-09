@@ -97,6 +97,10 @@ export type Mutable<T> = {
   -readonly [K in keyof T]: T[K]
 }
 
+export type NoKeyEmpty<T extends Object> = {
+	[K in keyof Required<T>]: NonNullable<Required<T>[K]>
+}
+
 namespace type_test {
 	type Field = {
 		type: 'plain-field'
@@ -107,4 +111,11 @@ namespace type_test {
 	}
 
 	type PlainField = ExtractByType<Field, 'plain-field'>
+
+	type Obj = {
+		formField?: string
+		formId?: number | null
+	}
+
+	type NoNullObj = NoKeyEmpty<Obj>
 }

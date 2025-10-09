@@ -73,6 +73,14 @@ export var ModuleResult;
         }
     }
     ModuleResult.mapErr = mapErr;
+    function isOk(result) {
+        return result.type === 'ok';
+    }
+    ModuleResult.isOk = isOk;
+    function isErr(result) {
+        return result.type === 'err';
+    }
+    ModuleResult.isErr = isErr;
 })(ModuleResult || (ModuleResult = {}));
 export const ok = ModuleResult.ok;
 export const err = ModuleResult.err;

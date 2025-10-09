@@ -26,3 +26,6 @@ export type ExtractByType<T extends {
 export type Mutable<T> = {
     -readonly [K in keyof T]: T[K];
 };
+export type NoKeyEmpty<T extends Object> = {
+    [K in keyof Required<T>]: NonNullable<Required<T>[K]>;
+};

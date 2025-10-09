@@ -1,10 +1,6 @@
-export type Result<T, E> = {
-  type: 'ok',
-  value: T
-} | {
-  type: 'err',
-  value: E
-}
+import type { ExtractByType } from "./types"
+
+export type Result<T, E> = ModuleResult.Result<T, E>
 
 /** @deprecated */
 export const ResultModule = {
@@ -80,6 +76,14 @@ export namespace ModuleResult {
     } else {
       return result
     }
+  }
+
+  export function isOk<T, E>(result: Result<T, E>): result is ExtractByType<Result<T, E>, 'ok'> {
+    return result.type === 'ok'
+  }
+
+  export function isErr<T, E>(result: Result<T, E>): result is ExtractByType<Result<T, E>, 'err'> {
+    return result.type === 'err'
   }
 }
 

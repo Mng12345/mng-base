@@ -1,6 +1,6 @@
 {
   "name": "mng-base",
-  "version": "1.2.7",
+  "version": "1.2.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/Mng12345/mng-base.git"
@@ -27,6 +27,11 @@
       "types": "./dist/esm/types.d.ts"
     }
   },
+  "files": [
+    "dist",
+    "package.json",
+    "readme.md"
+  ],
   "scripts": {
     "build:cjs": "yarn test & tsc --module commonjs --outDir dist/cjs",
     "build:esm": "tsc --module esnext --outDir dist/esm",

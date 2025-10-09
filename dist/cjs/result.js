@@ -76,6 +76,14 @@ var ModuleResult;
         }
     }
     ModuleResult.mapErr = mapErr;
+    function isOk(result) {
+        return result.type === 'ok';
+    }
+    ModuleResult.isOk = isOk;
+    function isErr(result) {
+        return result.type === 'err';
+    }
+    ModuleResult.isErr = isErr;
 })(ModuleResult || (exports.ModuleResult = ModuleResult = {}));
 exports.ok = ModuleResult.ok;
 exports.err = ModuleResult.err;
