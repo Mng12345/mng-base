@@ -72,6 +72,9 @@ const isNullable = (value) => {
 exports.isNullable = isNullable;
 exports.block = base.block;
 exports.ds = data_structure_1.default;
+/**
+ * @deprecated
+ */
 class ResultOk {
     constructor(value) {
         this.value = value;
@@ -79,6 +82,9 @@ class ResultOk {
     }
 }
 exports.ResultOk = ResultOk;
+/**
+ * @deprecated
+ */
 class ResultErr {
     constructor(value) {
         this.value = value;
@@ -86,36 +92,43 @@ class ResultErr {
     }
 }
 exports.ResultErr = ResultErr;
-/**
- * @deprecated
- */
 class Result {
-    constructor(value) {
+    constructor(tag, value, error) {
+        this.tag = tag;
         this.value = value;
+        this.error = error;
     }
     static ok(value) {
-        return new Result(new ResultOk(value));
+        return new Result(0 /* ResultTag.Ok */, value, undefined);
     }
-    static err(value) {
-        return new Result(new ResultErr(value));
+    static err(error) {
+        return new Result(1 /* ResultTag.Err */, undefined, error);
     }
     isOk() {
-        return this.value instanceof ResultOk;
+        return this.tag === 0 /* ResultTag.Ok */;
     }
     isErr() {
-        return this.value instanceof ResultErr;
+        return this.tag === 1 /* ResultTag.Err */;
     }
     unwrap() {
         if (this.isOk()) {
-            return this.value.value;
+            return this.value;
         }
         else {
-            throw new Error(`this.value is not an instanceof ResultOk<T>`);
+            throw new Error(`this.value is undefined`);
+        }
+    }
+    getError() {
+        if (this.isErr()) {
+            return this.error;
+        }
+        else {
+            throw new Error(`the result is not err but called getError`);
         }
     }
     unwrapOr(defaultValue) {
         if (this.isOk()) {
-            return this.value.value;
+            return this.value;
         }
         else {
             return defaultValue;
@@ -123,7 +136,7 @@ class Result {
     }
     unwrapOrElse(defaultF) {
         if (this.isOk()) {
-            return this.value.value;
+            return this.value;
         }
         else {
             return defaultF();
@@ -131,31 +144,31 @@ class Result {
     }
     expect(message) {
         if (this.isOk()) {
-            return this.value.value;
+            return this.value;
         }
         else {
             throw new Error(message);
         }
     }
     map(op) {
-        if (this.value instanceof ResultOk) {
-            return Result.ok(op(this.value.value));
+        if (this.isOk()) {
+            return Result.ok(op(this.value));
         }
         else {
-            return Result.err(this.value.value);
+            return Result.err(this.getError());
         }
     }
     flatMap(op) {
-        if (this.value instanceof ResultOk) {
-            return op(this.value.value);
+        if (this.isOk()) {
+            return op(this.value);
         }
         else {
-            return Result.err(this.value.value);
+            return Result.err(this.getError());
         }
     }
     mapOr(defaultValue, op) {
-        if (this.value instanceof ResultOk) {
-            return op(this.value.value);
+        if (this.isOk()) {
+            return op(this.value);
         }
         else {
             return defaultValue;
@@ -163,18 +176,18 @@ class Result {
     }
     mapOrElse(defaultF, op) {
         if (this.isOk()) {
-            return op(this.value.value);
+            return op(this.value);
         }
         else {
             return defaultF();
         }
     }
     mapErr(op) {
-        if (this.value instanceof ResultErr) {
-            return Result.err(op(this.value.value));
+        if (this.isErr()) {
+            return Result.err(op(this.error));
         }
         else {
-            return Result.ok(this.value.value);
+            return Result.ok(this.unwrap());
         }
     }
 }

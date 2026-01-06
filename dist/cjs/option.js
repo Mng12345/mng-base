@@ -5,7 +5,7 @@ exports.flatMap = exports.empty = exports.isNullable = exports.isNonNullable = e
 exports.OptionModule = {
     map: (option, map, defaultValue) => {
         if (option === null || option === undefined) {
-            return defaultValue !== null && defaultValue !== void 0 ? defaultValue : undefined;
+            return defaultValue ?? undefined;
         }
         else {
             return map(option);
@@ -33,7 +33,7 @@ var ModuleOption;
 (function (ModuleOption) {
     function map(option, map, defaultValue) {
         if (option === null || option === undefined) {
-            return defaultValue !== null && defaultValue !== void 0 ? defaultValue : undefined;
+            return defaultValue ?? undefined;
         }
         else {
             return map(option);

@@ -39,31 +39,37 @@ export declare const isNullable: (value: any) => value is (null | undefined);
 export declare const block: typeof base.block;
 export import types = types_;
 export import ds = data_structure;
+/**
+ * @deprecated
+ */
 export declare class ResultOk<T> {
     readonly value: T;
     tag: 'ok';
     constructor(value: T);
 }
+/**
+ * @deprecated
+ */
 export declare class ResultErr<E> {
     readonly value: E;
     tag: 'err';
     constructor(value: E);
 }
-/**
- * @deprecated
- */
 export declare class Result<T, E> {
-    readonly value: ResultOk<T> | ResultErr<E>;
-    constructor(value: ResultOk<T> | ResultErr<E>);
+    private readonly tag;
+    readonly value?: T | undefined;
+    readonly error?: E | undefined;
+    private constructor();
     static ok<T, E = any>(value: T): Result<T, E>;
-    static err<E, T = any>(value: E): Result<T, E>;
-    isOk(): this is {
-        value: ResultOk<T>;
+    static err<E, T = any>(error: E): Result<T, E>;
+    isOk(): this is Result<T, E> & {
+        value: T;
     };
-    isErr(): this is {
-        value: ResultErr<E>;
+    isErr(): this is Result<T, E> & {
+        error: E;
     };
     unwrap(): T;
+    getError(): E;
     unwrapOr(defaultValue: T): T;
     unwrapOrElse(defaultF: () => T): T;
     expect(message: string): T;

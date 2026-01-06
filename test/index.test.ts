@@ -11,15 +11,15 @@ test('Result', () => {
   const r2 = createResult2()
   const r3 = Result.ok<string, string>("1")
   if (r1.isOk()) {
-    expect(r1.value.value).toBe(1)
+    expect(r1.value).toBe(1)
     expect(r1.unwrap()).toBe(1)
   } else if (r1.isErr()) {
-    expect(r1.value.value).toBe("error")
+    expect(r1.getError()).toBe("error")
   }
   if (r2.isOk()) {
-    expect(r2.value.value).toBe(1)
+    expect(r2.value).toBe(1)
   } else if (r2.isErr()) {
-    expect(r2.value.value).toBe("error")
+    expect(r2.getError()).toBe("error")
   }
   expect(r1.expect("number")).toBe(1)
   expect(() => r2.expect("error in expect")).toThrow(new Error('error in expect'))
@@ -28,13 +28,13 @@ test('Result', () => {
   expect(r2.mapOr<number>(1, v => v)).toBe(1)
   expect(r2.mapOrElse(() => 1, v => v)).toBe(1)
   expect(r1.mapOr<number>(1, v => v + 1)).toBe(2)
-  expect(r2.mapErr(err => "map error").value.value).toBe("map error")
+  expect(r2.mapErr(err => "map error").getError()).toBe("map error")
   expect(r2.unwrapOr(1)).toBe(1)
   expect(r2.unwrapOrElse(() => 1)).toBe(1)
   if (r3.isOk()) {
-    expect(r3.value.value).toBe("1")
+    expect(r3.value).toBe("1")
   } else {
-    expect(typeof r3.value.value).toBe("string")
+    expect(typeof r3.getError()).toBe("string")
   }
 })
 

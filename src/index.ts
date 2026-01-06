@@ -92,49 +92,65 @@ export const block = base.block
 export import types = types_
 export import ds = data_structure 
 
+/**
+ * @deprecated
+ */
 export class ResultOk<T> {
   tag: 'ok' = 'ok'
   constructor(readonly value: T) {}
 }
 
+/**
+ * @deprecated
+ */
 export class ResultErr<E> {
   tag: 'err' = 'err'
   constructor(readonly value: E) {}
 }
 
-/**
- * @deprecated
- */
+const enum ResultTag {
+  Ok = 0,
+  Err = 1
+}
+
 export class Result<T, E> {
-  constructor(readonly value: ResultOk<T> | ResultErr<E>) {}
+  private constructor(private readonly tag: ResultTag, readonly value?: T, readonly error?: E) {}
 
   static ok<T, E=any>(value: T): Result<T, E> {
-    return new Result<T, E>(new ResultOk(value))
+    return new Result<T, E>(ResultTag.Ok, value, undefined)
   } 
 
-  static err<E, T=any>(value: E): Result<T, E> {
-    return new Result<T, E>(new ResultErr(value))
+  static err<E, T=any>(error: E): Result<T, E> {
+    return new Result<T, E>(ResultTag.Err, undefined, error)
   }
 
-  isOk(): this is {value: ResultOk<T>} {
-    return this.value instanceof ResultOk
+  isOk(): this is Result<T, E> & {value: T} {
+    return this.tag === ResultTag.Ok
   }
 
-  isErr(): this is {value: ResultErr<E>} {
-    return this.value instanceof ResultErr
+  isErr(): this is Result<T, E> & {error: E} {
+    return this.tag === ResultTag.Err
   }
 
   unwrap(): T {
     if (this.isOk()) {
-      return this.value.value
+      return this.value
     } else {
-      throw new Error(`this.value is not an instanceof ResultOk<T>`)
+      throw new Error(`this.value is undefined`)
+    }
+  }
+
+  getError(): E {
+    if (this.isErr()) {
+      return this.error
+    } else {
+      throw new Error(`the result is not err but called getError`)
     }
   }
 
   unwrapOr(defaultValue: T): T {
     if (this.isOk()) {
-      return this.value.value
+      return this.value
     } else {
       return defaultValue
     }
@@ -142,7 +158,7 @@ export class Result<T, E> {
 
   unwrapOrElse(defaultF: () => T): T {
     if (this.isOk()) {
-      return this.value.value
+      return this.value
     } else {
       return defaultF()
     }
@@ -150,31 +166,31 @@ export class Result<T, E> {
 
   expect(message: string): T {
     if (this.isOk()) {
-      return this.value.value
+      return this.value
     } else {
       throw new Error(message)
     }
   }
 
   map<U>(op: (value: T) => U): Result<U, E> {
-    if (this.value instanceof ResultOk) {
-      return Result.ok(op(this.value.value))
+    if (this.isOk()) {
+      return Result.ok(op(this.value))
     } else {
-      return Result.err(this.value.value)
+      return Result.err(this.getError())
     }
   }
 
   flatMap<U>(op: (value: T) => Result<U, E>): Result<U, E> {
-    if (this.value instanceof ResultOk) {
-      return op(this.value.value)
+    if (this.isOk()) {
+      return op(this.value)
     } else {
-      return Result.err(this.value.value)
+      return Result.err(this.getError())
     }
   }
 
   mapOr<U>(defaultValue: U, op: (value: T) => U): U {
-    if (this.value instanceof ResultOk) {
-      return op(this.value.value)
+    if (this.isOk()) {
+      return op(this.value)
     } else {
       return defaultValue
     }
@@ -182,17 +198,17 @@ export class Result<T, E> {
 
   mapOrElse<U>(defaultF: () => U, op: (value: T) => U): U {
     if (this.isOk()) {
-      return op(this.value.value)
+      return op(this.value)
     } else {
       return defaultF()
     }
   }
 
   mapErr<U>(op: (error: E) => U): Result<T, U> {
-    if (this.value instanceof ResultErr) {
-      return Result.err(op(this.value.value))
+    if (this.isErr()) {
+      return Result.err(op(this.error))
     } else {
-      return Result.ok(this.value.value)
+      return Result.ok(this.unwrap())
     }
   }
 }
